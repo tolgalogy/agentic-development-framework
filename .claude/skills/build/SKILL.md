@@ -15,7 +15,7 @@ Implements the Builder's part of `WORKFLOW.md` §7: `ready -> in_progress -> rev
 
 1. Load only the task packet and `docs/project-policy.md` by default — pull in architecture context or other source files only if the task actually touches them (`WORKFLOW.md` §4 token budget).
 2. Delegate to the `builder` agent to implement strictly within `scope`, using the repository's existing patterns and commands.
-3. The builder self-tests with real command output as evidence and records it on the task. Where the task's acceptance criteria call for real executable acceptance evidence (not just unit tests), the builder may use the vendored `ln-42-acceptance-test-builder` skill (see `SKILLS.md`) to produce it — note its own rule: if a test it writes exposes a product defect, it stops and reports that rather than patching the implementation to force a pass.
+3. The builder self-tests with real command output as evidence and records it on the task. Where the task's acceptance criteria call for real executable test evidence, the builder may use the vendored `test-master` skill (see `SKILLS.md`) to write it — it never uses production data, mocks external dependencies, and treats a failing test as a defect to report, not something to weaken until it passes.
 4. If self-test fails, the builder repairs and retries — bounded to 3 attempts (`CLAUDE.md` §8). On a 3rd failure, stop and escalate rather than retrying further.
 5. Task moves to `review`. Tell the user the next step is `/verify` — building does not include approval or merge.
 

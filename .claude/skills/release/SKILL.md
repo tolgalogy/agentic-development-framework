@@ -18,7 +18,8 @@ Implements `WORKFLOW.md` §10. This is a gate over a batch of already-merged tas
    - release approval is present when project policy requires it
 3. If anything is missing, report exactly what and stop — do not declare a release ready to paper over a gap.
 4. If everything is satisfied, report `RELEASE_READY` and record the checklist result in `docs/decisions.md`. Actual deployment is a separate, explicitly authorized action (see `templates/ci/` for the platform pipeline) — this skill confirms readiness, it does not deploy.
-5. If the release includes tagging and publishing a GitHub Release (as opposed to just a deploy), the vendored `ln-63-release-publisher` skill (see `SKILLS.md`) handles the actual tag/notes/publish mechanics — it still stops for explicit Human approval of the exact tag and notes before publishing anything, so it doesn't bypass this checklist.
+
+There is currently no vendored skill for tagging/publishing a GitHub Release — checked the confirmed source list in `SKILLS.md`; the one candidate found lacked the metadata a skill needs to even be invocable. Until that changes, the Technical Lead/Human handles the actual tag and release-notes publication directly (`gh release create` or equivalent), using this checklist's `RELEASE_READY` result as the go-ahead.
 
 ## Don't
 

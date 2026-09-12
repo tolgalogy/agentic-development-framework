@@ -17,8 +17,9 @@ Implements the Technical Lead's part of `WORKFLOW.md` §5–§8: turn an approve
 2. It will produce task packet(s) under `docs/tasks/`, each linked to the specific module spec(s) it implements, with `risk`, `scope`, `validation`, and `review` set per `WORKFLOW.md` §8 — small low-risk work gets the short path, high-risk work (auth/payments/PII/public APIs/migrations/infra/release/reliability-impacting) gets the full checklist including security review.
 3. It sets task `dependencies` from each module's own `dependencies` field, so build order respects inter-module dependencies rather than assuming modules are independent.
 4. It records an architecture/technical decision in `docs/decisions.md` only if one was actually made — a single-file bug fix task should not produce a decision entry.
-5. For a non-trivial or high-risk breakdown, optionally invoke the vendored `ln-11-plan-reviewer` skill (see `SKILLS.md`) for an independent second pass over the task packets before moving anything to `ready` — skip it for small, obviously-scoped work.
-6. Review the task breakdown for scope creep beyond the approved Requirement before moving any task to `ready`.
+5. Review the task breakdown for scope creep beyond the approved Requirement before moving any task to `ready`.
+
+There is currently no vendored skill for an independent second pass over a task breakdown — checked the confirmed source list in `SKILLS.md` and nothing there does evidence-first plan review without also being a design/authoring tool. For a non-trivial or high-risk breakdown, the `tech-lead` agent's own review in step 5 is what you have; treat that as a signal to slow down and re-read the breakdown yourself rather than expecting a second independent pass.
 
 ## Output
 

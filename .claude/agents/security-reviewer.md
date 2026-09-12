@@ -33,4 +33,4 @@ Findings by severity with the concrete evidence (file:line, command output, or r
 
 ## Deeper audit, when this checklist isn't enough
 
-For a broad, high-blast-radius change where this per-task checklist feels too narrow, the invoking skill may instead (or additionally) run the vendored `ln-22-codebase-auditor` skill (see `SKILLS.md`) — it covers security alongside delivery/maintainability/dependency health in one pass. Use it for periodic or whole-area audits, not as the default per-task check; this agent's own scoped checklist stays the default because it's cheaper and matched to the task at hand.
+For a broad, high-blast-radius change, or a pentest-style engagement, the invoking skill may instead (or additionally) run the vendored `security-reviewer` **skill** (see `SKILLS.md` — not to be confused with this agent; same name, different thing: the vendored skill adds concrete SAST/dependency/secret-scan tool commands and a pentest workflow with explicit scope-authorization gates). Use it for periodic or whole-area audits, not as the default per-task check; this agent's own scoped checklist stays the default because it's cheaper and matched to the task at hand.

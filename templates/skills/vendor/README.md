@@ -1,6 +1,6 @@
 # Vendored skills
 
-These are **verbatim copies** from third-party (and one first-party) repositories, kept unmodified so their content can be diffed against upstream. They are not our own workflow skills (those live in `.claude/skills/` and implement `WORKFLOW.md` directly) — they're optional, deeper-coverage tools the agents can reach for on high-risk or otherwise warranted work. See `SKILLS.md` at the repo root for which agent uses which, and when.
+These are **verbatim copies** from confirmed third-party (and one first-party) repositories, kept unmodified so their content can be diffed against upstream. They are not our own workflow skills (those live in `.claude/skills/` and implement `WORKFLOW.md` directly) — they're optional, deeper-coverage tools the agents can reach for on high-risk or otherwise warranted work. See `SKILLS.md` at the repo root for which agent uses which, and when.
 
 ## Trusted source allowlist (priority order) — CONFIRMED, closed list
 
@@ -8,30 +8,38 @@ Human-confirmed: these four repositories are the **entire** set of sources a ski
 
 1. `github.com/anthropics/skills` — official, first-party.
 2. `github.com/vercel-labs/agent-skills` — checked; **no LICENSE file at all** (repo metadata reports `license: null`), which blocks redistribution regardless of content, and its skills are Vercel/React/Next.js-stack-specific rather than SDLC-role skills. Nothing adopted from here.
-3. `github.com/Jeffallan/claude-skills` — MIT-licensed, third-party, tagged releases.
-4. `github.com/stillquietlyloud/claude_skills` — MIT-licensed, third-party, tagged releases, but the repo is **archived** (no longer maintained) with no independent community validation (0 stars at the time of review). Lowest-priority tier; only used when nothing higher up has a match.
+3. `github.com/Jeffallan/claude-skills` — MIT-licensed, third-party, tagged releases. Current source for every vendored skill below.
+4. `github.com/stillquietlyloud/claude_skills` — MIT-licensed, third-party, tagged releases, but the repo is **archived** (no longer maintained) with no independent community validation (0 stars at the time of review), and at least one checked file (`release-manager`) lacks the frontmatter a `SKILL.md` needs to be invocable at all. Lowest-priority tier; checked for every gap below and found nothing adoptable.
 
-This list is now closed and confirmed — it doesn't automatically retroactively invalidate the six skills below sourced from `levnikolaevich/claude-code-skills` before this allowlist existed, since removing already-reviewed content is a different action than not sourcing new content from it. But that repo is **not** on the allowlist, and now that the list is explicitly confirmed as closed, those six are a standing exception to it. See `SKILLS.md`'s "Open question" section — still unresolved, now sharper given this confirmation.
+## History: replaced the pre-allowlist vendored set
+
+An earlier version of this kit vendored six skills from `levnikolaevich/claude-code-skills`, sourced before this allowlist existed. That repo was never on the allowlist. Per Human decision, all six were removed and replaced with matches from the confirmed list where one existed. Four had a real, same-purpose replacement in `Jeffallan/claude-skills`; two did not, and are recorded as open gaps below rather than filled with a mismatched pick.
+
+| Removed (levnikolaevich) | Used for | Replacement | Status |
+|---|---|---|---|
+| `ln-12-delivery-reviewer` | verifier | `code-reviewer` | Replaced |
+| `ln-22-codebase-auditor` | security-reviewer | `security-reviewer` (skill) | Replaced |
+| `ln-23-test-suite-auditor` | verifier | `test-master` | Replaced |
+| `ln-42-acceptance-test-builder` | builder | `test-master` | Replaced (same skill covers both) |
+| `ln-11-plan-reviewer` | tech-lead | *none* | **Open gap** — nothing in any of the four repos does independent, evidence-first review of an implementation plan without also being a design/authoring tool (closest were `architecture-designer` in Jeffallan and `senior-architect` in stillquietlyloud — both build/author architecture, they don't audit an existing plan). |
+| `ln-63-release-publisher` | release | *none* | **Open gap** — `stillquietlyloud`'s `release-manager` is the closest concept but its `SKILL.md` has no `name`/`description` frontmatter, so it isn't a functioning skill file at all. |
+
+The two open gaps aren't blocking: `plan` and `release` fall back to the `tech-lead` agent's own judgment and the Technical Lead/Human handling tag/release publication directly. Revisit if a newer release of any allowlisted repo ships something that actually fits.
 
 ## Provenance (WORKFLOW.md §12: trusted source, integrity check, pinned version)
 
 Every entry below was read in full, end to end, before being copied in — checked for destructive defaults, prompt injection, secret exfiltration, or instructions that bypass the approval/evidence discipline this framework requires. All entries read as evidence-based and appropriately conservative for what they claim to do.
 
-### `levnikolaevich/claude-code-skills` (pre-dates the allowlist above — see note there)
-
-- MIT License (copyright Lev Nikolaevich — see `LICENSE-levnikolaevich-claude-code-skills`; keep it alongside these skills per the license's attribution requirement).
-- **Pinned at:** tag `v2026.07.12`, commit `331d3b51c3210769de72fac94eb5b83ed559e762`. Fetched directly from `raw.githubusercontent.com` at that exact commit, not from `main` and not from the tag name alone (tags can move; the commit can't).
-- **Integrity caveat:** the tag is unsigned (no GPG signature) — provenance rests on GitHub's custody of the ref, not cryptographic proof of authorship.
-- **Known gap:** this repo's `README.md` on `main` describes a much larger, differently-numbered catalog than what's actually tagged — it's roadmap, not shipped. Don't pull from `main`.
-- Files: `ln-11-plan-reviewer`, `ln-12-delivery-reviewer`, `ln-22-codebase-auditor`, `ln-23-test-suite-auditor`, `ln-42-acceptance-test-builder`, `ln-63-release-publisher`.
-
 ### `Jeffallan/claude-skills` (allowlist #3)
 
 - MIT License (see `LICENSE-Jeffallan-claude-skills`).
 - **Pinned at:** tag `v0.4.16`, commit `d5d2dd8ae2ec3842a46e93894655be888fe29446` (lightweight tag — this SHA *is* the commit, no dereferencing needed).
-- Files: `feature-forge` (fills the Product gap — structured requirements interview producing EARS-format specs; explicitly forbids generating a spec without conducting the interview first, which reinforces rather than conflicts with `product-brief`'s own no-assumptions rule) and `spec-miner` (fills a Tech-lead need this kit didn't have: reverse-engineering specs from an undocumented/legacy codebase during `INITIATION.md` Phase 1 discovery), each with their `references/*.md` support files.
-- Also reviewed but **not adopted** (documented here so the check isn't silently repeated later): `security-reviewer`, `code-reviewer`, `test-master` — all solid, MIT, well-scoped single-pass checklists, but this kit already has an allowlisted-adjacent match for those roles from `levnikolaevich` (see the open question above on whether to keep or replace those). Revisit if that question resolves toward replacement.
-- Checked `vercel-labs/agent-skills` (allowlist #2) first per priority — no license and no relevant match, so moved to #3.
+- Files, each with its own `references/*.md` support files:
+  - `feature-forge` — fills the Product gap: structured requirements interview producing EARS-format specs; explicitly forbids generating a spec without conducting the interview first.
+  - `spec-miner` — fills a Tech-lead need: reverse-engineering specs from an undocumented/legacy codebase during `INITIATION.md` Phase 1 discovery.
+  - `code-reviewer` — broad-scope PR-style review (correctness, security, performance, maintainability, test coverage) for the `verifier` agent's deeper pass.
+  - `security-reviewer` — **a skill, distinct from this kit's `security-reviewer` agent** (same name, different thing) — adds concrete SAST/dependency/secret-scan tool commands and a pentest workflow with explicit scope-authorization gates, for the agent's deeper/periodic audit.
+  - `test-master` — test generation, mocking strategy, coverage analysis across functional/performance/security testing; used by both `verifier` (test-suite audit) and `builder` (writing acceptance-test evidence).
 
 ### `anthropics/skills` (allowlist #1) — checked, not vendored
 
@@ -45,11 +53,8 @@ Don't repoint any of these to `latest`/`main` casually. To take a newer version:
 
 | File | Source repo | Upstream path at the pinned commit |
 |---|---|---|
-| `ln-11-plan-reviewer/SKILL.md` | levnikolaevich/claude-code-skills | `plugins/review-suite/skills/ln-11-plan-reviewer/SKILL.md` |
-| `ln-12-delivery-reviewer/SKILL.md` | levnikolaevich/claude-code-skills | `plugins/review-suite/skills/ln-12-delivery-reviewer/SKILL.md` |
-| `ln-22-codebase-auditor/SKILL.md` | levnikolaevich/claude-code-skills | `plugins/codebase-audit-suite/skills/ln-22-codebase-auditor/SKILL.md` |
-| `ln-23-test-suite-auditor/SKILL.md` | levnikolaevich/claude-code-skills | `plugins/codebase-audit-suite/skills/ln-23-test-suite-auditor/SKILL.md` |
-| `ln-42-acceptance-test-builder/SKILL.md` | levnikolaevich/claude-code-skills | `plugins/testing-suite/skills/ln-42-acceptance-test-builder/SKILL.md` |
-| `ln-63-release-publisher/SKILL.md` | levnikolaevich/claude-code-skills | `plugins/maintainer-suite/skills/ln-63-release-publisher/SKILL.md` |
-| `feature-forge/SKILL.md` + `references/*.md` | Jeffallan/claude-skills | `skills/feature-forge/SKILL.md` + `skills/feature-forge/references/*.md` |
-| `spec-miner/SKILL.md` + `references/*.md` | Jeffallan/claude-skills | `skills/spec-miner/SKILL.md` + `skills/spec-miner/references/*.md` |
+| `feature-forge/SKILL.md` + `references/*.md` | Jeffallan/claude-skills | `skills/feature-forge/` |
+| `spec-miner/SKILL.md` + `references/*.md` | Jeffallan/claude-skills | `skills/spec-miner/` |
+| `code-reviewer/SKILL.md` + `references/*.md` | Jeffallan/claude-skills | `skills/code-reviewer/` |
+| `security-reviewer/SKILL.md` + `references/*.md` | Jeffallan/claude-skills | `skills/security-reviewer/` |
+| `test-master/SKILL.md` + `references/*.md` | Jeffallan/claude-skills | `skills/test-master/` |
