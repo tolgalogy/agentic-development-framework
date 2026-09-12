@@ -1,0 +1,60 @@
+# Template CI/CD for a web project. Copy to .github/workflows/web.yml and adapt
+# commands to the actual package manager/framework recorded in docs/project-profile.md.
+#
+# Maps to WORKFLOW.md §8: every PR gets the risk-based checklist; merge to main
+# deploys to staging automatically; production requires an explicit approval via
+# the `production` GitHub Environment's protection rules (configure that in repo
+# settings — this file does not grant deploy access on its own).
+
+name: web
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  checks:
+    name: lint, typecheck, test, build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      - run: npm run lint
+      - run: npm run typecheck
+      - run: npm test -- --ci
+      - run: npm run build
+
+  security:
+    name: dependency & secret scan
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: npm audit --audit-level=high
+      # Replace/extend with the project's actual SAST/secret-scan tool if it has one.
+
+  deploy-staging:
+    name: deploy to staging
+    needs: [checks, security]
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    environment: staging
+    steps:
+      - uses: actions/checkout@v4
+      - run: echo "Replace with the project's actual staging deploy command."
+
+  deploy-production:
+    name: deploy to production
+    needs: [deploy-staging]
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    # Requires a human reviewer via the `production` environment's protection
+    # rules — this is the release approval gate from WORKFLOW.md §10.
+    environment: production
+    steps:
+      - uses: actions/checkout@v4
+      - run: echo "Replace with the project's actual production deploy command."

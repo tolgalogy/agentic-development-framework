@@ -1,0 +1,50 @@
+# Template CI/CD for a desktop project (Electron / Tauri / native).
+# Copy to .github/workflows/desktop.yml and adapt to the actual toolchain
+# recorded in docs/project-profile.md. Signing/notarization credentials must
+# live in repo/org secrets, never in this file (CLAUDE.md §7).
+
+name: desktop
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  checks:
+    name: lint, typecheck, test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: echo "Run lint/typecheck/unit tests for the actual stack."
+
+  security:
+    name: dependency scan
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: echo "Run the project's dependency/secret scan here."
+
+  build:
+    name: build & package
+    needs: [checks, security]
+    if: github.ref == 'refs/heads/main'
+    strategy:
+      matrix:
+        os: [macos-latest, windows-latest, ubuntu-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - run: echo "Build and package for ${{ matrix.os }}; sign/notarize per platform-specific secrets."
+      - run: echo "Upload the packaged artifact for this OS."
+
+  release:
+    name: publish release (manual gate)
+    needs: [build]
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    # `production` environment protection rules require explicit human approval
+    # before a desktop release/update channel is published (WORKFLOW.md §10).
+    environment: production
+    steps:
+      - run: echo "Publish artifacts to the update channel / release page per the project's actual process."

@@ -1,0 +1,60 @@
+# Template CI/CD for a mobile project (React Native / Flutter / native).
+# Copy to .github/workflows/mobile.yml and adapt to the actual toolchain
+# recorded in docs/project-profile.md. Signing credentials must live in repo/
+# org secrets, never in this file or in prompts (CLAUDE.md §7).
+#
+# Store submission is manual/conditional by default — most projects want a
+# human decision before something ships to an app store (WORKFLOW.md §9, §10).
+
+name: mobile
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  checks:
+    name: lint, typecheck, unit test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: echo "Install deps + run lint/typecheck/unit tests for the actual stack."
+
+  security:
+    name: dependency scan
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: echo "Run the project's dependency/secret scan here."
+
+  build-android:
+    name: build android
+    needs: [checks, security]
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: echo "Build a signed or debug artifact per docs/project-policy.md's platform rules."
+      # Signing: use org/repo secrets referenced here, never hardcoded.
+
+  build-ios:
+    name: build ios
+    needs: [checks, security]
+    if: github.ref == 'refs/heads/main'
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: echo "Build via fastlane/xcodebuild per the project's actual setup."
+
+  release-to-store:
+    name: submit to store (manual gate)
+    needs: [build-android, build-ios]
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    # `production` environment protection rules require an explicit human
+    # approval before store submission — this is the release approval from
+    # WORKFLOW.md §10, not an automatic step.
+    environment: production
+    steps:
+      - run: echo "Submit to TestFlight/Play Console per the project's actual release process."
