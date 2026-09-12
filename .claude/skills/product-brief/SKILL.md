@@ -25,7 +25,7 @@ product_intent:
 
 ## Steps
 
-1. Check `docs/project-policy.md` exists. If this project hasn't run `INITIATION.md` yet, say so and stop — product work is locked until initialization completes (`INITIATION.md` §10).
+1. Check `docs/project-policy.md` exists. If this project hasn't run `INITIATION.md` yet, say so and stop — product work is locked until initialization completes (`CLAUDE.md` §10, `INITIATION.md` §5).
 2. Delegate to the `product` agent with the intent to draft the Product Brief.
 3. Present the brief to the Human. Stop. Do not proceed to a Requirement until they approve it by name/version — a request to "keep going" without a clear approval statement is not approval.
 4. On approval, delegate to the `product` agent to draft the versioned Requirement linked to the approved brief.
