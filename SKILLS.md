@@ -5,9 +5,9 @@ Every skill each agent uses, where it came from, and why. Two tiers, per `WORKFL
 1. **In-house workflow skills** — authored for this framework, implementing `WORKFLOW.md`'s lifecycle directly. These aren't "found," they're the framework's own control flow.
 2. **Vendored supporting skills** — pulled from an existing, already-confirmed source rather than written from scratch, for the deeper/optional capability an agent can reach for on top of its core lifecycle step. Only added where a real match existed at an actual pinned release; no slot was force-filled.
 
-## Trusted source allowlist (priority order)
+## Trusted source allowlist (priority order) — CONFIRMED, closed list
 
-Skill-sourcing checks are scoped to **only** these repositories, in this order — check #1 before #2, #2 before #3, and so on; prefer the highest-priority repo with a real, safe match over a lower one, and never force-fit a low-priority pick just to fill a table cell:
+Human-confirmed: these four repositories are the **entire** set of sources a skill may ever be sourced from for this framework. No other repository, marketplace, or site is permitted, regardless of license, star count, or how good a match it looks like — if none of these four has a safe match at a real pinned release, the answer is "no vendored skill for this slot," not "widen the search." When a skill is needed, check them in this exact order — #1 before #2, #2 before #3, #3 before #4 — and take the highest-priority repo with a real, safe match; never skip ahead to a lower-priority repo when a higher one already covers the need, and never force-fit a low-priority pick just to fill a table cell:
 
 | # | Repo | Status |
 |---|---|---|

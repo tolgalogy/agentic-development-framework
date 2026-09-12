@@ -2,16 +2,16 @@
 
 These are **verbatim copies** from third-party (and one first-party) repositories, kept unmodified so their content can be diffed against upstream. They are not our own workflow skills (those live in `.claude/skills/` and implement `WORKFLOW.md` directly) — they're optional, deeper-coverage tools the agents can reach for on high-risk or otherwise warranted work. See `SKILLS.md` at the repo root for which agent uses which, and when.
 
-## Trusted source allowlist (priority order)
+## Trusted source allowlist (priority order) — CONFIRMED, closed list
 
-Per Human direction, skill sourcing checks **only** these repositories, in this priority order — check #1 before #2, #2 before #3, and so on; prefer the highest-priority repo that has a real, safe match, and don't force-fit a lower-priority pick when a higher one already covers the need:
+Human-confirmed: these four repositories are the **entire** set of sources a skill may ever be sourced from for this framework. No other repository, marketplace, or site is permitted — not for a better license, a better match, or any other reason. When a skill is needed, check them in this exact order, and take the highest-priority repo with a real, safe match; if none of the four has one at an actual pinned release, that slot stays unfilled rather than reaching outside the list:
 
 1. `github.com/anthropics/skills` — official, first-party.
 2. `github.com/vercel-labs/agent-skills` — checked; **no LICENSE file at all** (repo metadata reports `license: null`), which blocks redistribution regardless of content, and its skills are Vercel/React/Next.js-stack-specific rather than SDLC-role skills. Nothing adopted from here.
 3. `github.com/Jeffallan/claude-skills` — MIT-licensed, third-party, tagged releases.
 4. `github.com/stillquietlyloud/claude_skills` — MIT-licensed, third-party, tagged releases, but the repo is **archived** (no longer maintained) with no independent community validation (0 stars at the time of review). Lowest-priority tier; only used when nothing higher up has a match.
 
-This list is the search scope for *finding new* skills — it doesn't retroactively invalidate the six skills below sourced from `levnikolaevich/claude-code-skills` before this allowlist existed. That repo is **not** on the allowlist; whether to keep those six as a grandfathered exception or replace them with an allowlisted alternative is an open question for the Human (see `SKILLS.md`'s "Open question" section) — not something resolved unilaterally here.
+This list is now closed and confirmed — it doesn't automatically retroactively invalidate the six skills below sourced from `levnikolaevich/claude-code-skills` before this allowlist existed, since removing already-reviewed content is a different action than not sourcing new content from it. But that repo is **not** on the allowlist, and now that the list is explicitly confirmed as closed, those six are a standing exception to it. See `SKILLS.md`'s "Open question" section — still unresolved, now sharper given this confirmation.
 
 ## Provenance (WORKFLOW.md §12: trusted source, integrity check, pinned version)
 
