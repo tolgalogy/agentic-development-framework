@@ -18,7 +18,8 @@ Implements `WORKFLOW.md` §8 (Risk-Based Validation) for a task in `review`.
 2. Delegate to the `verifier` agent: re-run validation commands independently, do quality review against acceptance criteria.
 3. If risk is `high`, or the diff touches auth/payments/PII/public APIs/migrations/infra/release, the verifier invokes the `security-reviewer` agent — don't skip this because the builder's self-test already passed; self-test and security review check different things.
 4. If any project-policy-activated conditional check applies (performance, accessibility, migration, privacy, platform), run it too — otherwise don't.
-5. Record pass/fail with evidence on the task.
+5. For `high` risk, or whenever the `verifier` agent's own pass leaves you wanting a second, more adversarial look: invoke the vendored `ln-12-delivery-reviewer` skill for a full independent multi-perspective review, and/or `ln-23-test-suite-auditor` if the task's own test changes leave the suite's trustworthiness in doubt (see `SKILLS.md`). These are additive, not a replacement for the `verifier` agent's check — use them when the risk actually warrants the extra cost, not on every task.
+6. Record pass/fail with evidence on the task.
    - **Fail:** task returns to `in_progress` with a specific reason. Counts toward the bounded repair limit (default 3) — if exceeded, escalate to Technical Lead instead of another `/build` → `/verify` loop.
    - **Pass:** report that the task is eligible for `MERGE_APPROVED`. Actual merge authorization is a Technical Lead/Human action — this skill does not merge anything.
 
