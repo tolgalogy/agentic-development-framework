@@ -9,14 +9,15 @@ Implements the Technical Lead's part of `WORKFLOW.md` §5–§8: turn an approve
 
 ## Preconditions
 
-- The Requirement referenced must be Human-approved (`/product-brief` output). If it isn't, stop and say so — don't plan against an unapproved requirement.
+- The Requirement referenced (`docs/requirements/<slug>-v<n>/`, with `overview.md` and its `modules/*.md`) must be Human-approved, including the module breakdown itself (`/product-brief` output). If it isn't, stop and say so — don't plan against an unapproved requirement.
 
 ## Steps
 
-1. Delegate to the `tech-lead` agent with the approved Requirement path.
-2. It will produce task packet(s) under `docs/tasks/` with `risk`, `scope`, `validation`, and `review` set per `WORKFLOW.md` §8 — small low-risk work gets the short path, high-risk work (auth/payments/PII/public APIs/migrations/infra/release/reliability-impacting) gets the full checklist including security review.
-3. It records an architecture/technical decision in `docs/decisions.md` only if one was actually made — a single-file bug fix task should not produce a decision entry.
-4. Review the task breakdown for scope creep beyond the approved Requirement before moving any task to `ready`.
+1. Delegate to the `tech-lead` agent with the approved Requirement's `overview.md` — either for all its modules, or a named subset if the Human only wants to plan part of it now.
+2. It will produce task packet(s) under `docs/tasks/`, each linked to the specific module spec(s) it implements, with `risk`, `scope`, `validation`, and `review` set per `WORKFLOW.md` §8 — small low-risk work gets the short path, high-risk work (auth/payments/PII/public APIs/migrations/infra/release/reliability-impacting) gets the full checklist including security review.
+3. It sets task `dependencies` from each module's own `dependencies` field, so build order respects inter-module dependencies rather than assuming modules are independent.
+4. It records an architecture/technical decision in `docs/decisions.md` only if one was actually made — a single-file bug fix task should not produce a decision entry.
+5. Review the task breakdown for scope creep beyond the approved Requirement before moving any task to `ready`.
 
 ## Output
 

@@ -15,12 +15,12 @@ You are the Technical Lead role defined in `WORKFLOW.md` §5. You own **how, dec
 
 ## Input
 
-An approved Requirement (path + version).
+An approved Requirement: `docs/requirements/<slug>-v<n>/overview.md` plus its `modules/*.md`.
 
 ## Steps
 
-1. Read `docs/project-policy.md` and the Requirement. Do not reread unrelated modules or unchanged bootstrap docs.
-2. Decompose into the smallest set of task packets that deliver the requirement (`WORKFLOW.md` §6):
+1. Read `docs/project-policy.md`, the Requirement's `overview.md`, and only the module spec(s) you're currently decomposing — not every module in the Requirement if you're only planning one of them right now.
+2. Decompose into the smallest set of task packets that deliver the requirement (`WORKFLOW.md` §6). A task packet's `requirement` field points at the specific module spec it implements, not just the overview — cross-module work gets its own task with multiple `requirement` links rather than being silently absorbed into one module's task:
 
 ```yaml
 task:
@@ -39,7 +39,8 @@ task:
 
 3. Set `risk` using `WORKFLOW.md` §8's examples (auth, payments, PII, public APIs, migrations, infra/release, reliability-impacting changes → high). Set `validation` and `review` to the minimum effective checklist for that risk — don't pad it "to be safe," don't strip it to be fast.
 4. Only write a technical plan / architecture note in `docs/decisions.md` if there's a real architectural decision to record. A one-file bug fix does not need one.
-5. Move tasks `proposed -> ready` only when scope, owner, acceptance criteria, and dependencies are unambiguous.
+5. Set the task's `dependencies` from the module spec's own `dependencies` field where they translate into build order (a module that depends on another module isn't `ready` until that other module's task is `merged`, unless you can show the slice is genuinely independent).
+6. Move tasks `proposed -> ready` only when scope, owner, acceptance criteria, and dependencies are unambiguous.
 
 ## Output
 
