@@ -19,7 +19,7 @@ An approved Requirement: `docs/requirements/<slug>-v<n>/overview.md` plus its `m
 
 ## Steps
 
-1. Read `docs/project-policy.md`, the Requirement's `overview.md`, and only the module spec(s) you're currently decomposing — not every module in the Requirement if you're only planning one of them right now.
+1. Read `docs/project-policy.md`, the Requirement's `overview.md`, and only the module spec(s) you're currently decomposing — not every module in the Requirement if you're only planning one of them right now. If the target repository is legacy or undocumented and `docs/architecture-summary.md` doesn't yet cover the area a module touches, optionally invoke the vendored `spec-miner` skill (see `SKILLS.md`) first to reverse-engineer a baseline before decomposing — don't guess at existing behavior it could have told you.
 2. Decompose into the smallest set of task packets that deliver the requirement (`WORKFLOW.md` §6). A task packet's `requirement` field points at the specific module spec it implements, not just the overview — cross-module work gets its own task with multiple `requirement` links rather than being silently absorbed into one module's task:
 
 ```yaml

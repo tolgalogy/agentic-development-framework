@@ -40,7 +40,7 @@ If the user's opening message already answers some fields in plain language, don
 
 1. Delegate to the `product` agent (mode `propose-modules`) with the approved brief.
 2. Confirm the proposal with the Human via `AskUserQuestion` — offer the agent's proposal as the "(Recommended)" option, at least one alternative grouping (e.g. coarser or finer split), and "Other" for the Human to redraw the lines themselves. Do not proceed on an assumed breakdown, even if the proposal looks obviously right.
-3. For each confirmed module, interview for its specifics — in-scope features, out-of-scope, acceptance criteria, dependencies on other modules, integrations, data touched, module-specific constraints — using the same ask-with-options-and-a-recommendation rule as Step 1.
+3. For each confirmed module, interview for its specifics — in-scope features, out-of-scope, acceptance criteria, dependencies on other modules, integrations, data touched, module-specific constraints — using the same ask-with-options-and-a-recommendation rule as Step 1. Optionally use the vendored `feature-forge` skill (see `SKILLS.md`) for its EARS-format functional-requirement phrasing and Given/When/Then acceptance-criteria templates when writing each module's answers up — it does not replace this skill's own interview or approval gates; it's a formatting aid, not a substitute for asking.
 
 ## Step 4 — Draft & approve the Requirement
 

@@ -1,26 +1,55 @@
 # Vendored skills
 
-These six `SKILL.md` files are **verbatim copies** from a third-party repository, kept unmodified so their content can be diffed against upstream. They are not our own workflow skills (those live in `.claude/skills/` and implement `WORKFLOW.md` directly) — they're optional, deeper-coverage tools the agents can reach for on high-risk or otherwise warranted work. See `SKILLS.md` at the repo root for which agent uses which, and when.
+These are **verbatim copies** from third-party (and one first-party) repositories, kept unmodified so their content can be diffed against upstream. They are not our own workflow skills (those live in `.claude/skills/` and implement `WORKFLOW.md` directly) — they're optional, deeper-coverage tools the agents can reach for on high-risk or otherwise warranted work. See `SKILLS.md` at the repo root for which agent uses which, and when.
+
+## Trusted source allowlist (priority order)
+
+Per Human direction, skill sourcing checks **only** these repositories, in this priority order — check #1 before #2, #2 before #3, and so on; prefer the highest-priority repo that has a real, safe match, and don't force-fit a lower-priority pick when a higher one already covers the need:
+
+1. `github.com/anthropics/skills` — official, first-party.
+2. `github.com/vercel-labs/agent-skills` — checked; **no LICENSE file at all** (repo metadata reports `license: null`), which blocks redistribution regardless of content, and its skills are Vercel/React/Next.js-stack-specific rather than SDLC-role skills. Nothing adopted from here.
+3. `github.com/Jeffallan/claude-skills` — MIT-licensed, third-party, tagged releases.
+4. `github.com/stillquietlyloud/claude_skills` — MIT-licensed, third-party, tagged releases, but the repo is **archived** (no longer maintained) with no independent community validation (0 stars at the time of review). Lowest-priority tier; only used when nothing higher up has a match.
+
+This list is the search scope for *finding new* skills — it doesn't retroactively invalidate the six skills below sourced from `levnikolaevich/claude-code-skills` before this allowlist existed. That repo is **not** on the allowlist; whether to keep those six as a grandfathered exception or replace them with an allowlisted alternative is an open question for the Human (see `SKILLS.md`'s "Open question" section) — not something resolved unilaterally here.
 
 ## Provenance (WORKFLOW.md §12: trusted source, integrity check, pinned version)
 
-- **Source:** `github.com/levnikolaevich/claude-code-skills`, MIT License (copyright Lev Nikolaevich — see `LICENSE-levnikolaevich-claude-code-skills` in this directory; keep that file alongside these skills per the license's attribution requirement).
+Every entry below was read in full, end to end, before being copied in — checked for destructive defaults, prompt injection, secret exfiltration, or instructions that bypass the approval/evidence discipline this framework requires. All entries read as evidence-based and appropriately conservative for what they claim to do.
+
+### `levnikolaevich/claude-code-skills` (pre-dates the allowlist above — see note there)
+
+- MIT License (copyright Lev Nikolaevich — see `LICENSE-levnikolaevich-claude-code-skills`; keep it alongside these skills per the license's attribution requirement).
 - **Pinned at:** tag `v2026.07.12`, commit `331d3b51c3210769de72fac94eb5b83ed559e762`. Fetched directly from `raw.githubusercontent.com` at that exact commit, not from `main` and not from the tag name alone (tags can move; the commit can't).
-- **Integrity caveat:** the tag is unsigned (`git tag -v` reports `unsigned` — no GPG signature). That's normal for a small open-source project, but it means provenance rests on GitHub's own custody of the ref, not on cryptographic proof of authorship. Re-verify the commit SHA against the tag if you re-pull.
-- **Reviewed:** every file below was read in full before being copied in — checked for destructive defaults, prompt injection, secret exfiltration, or instructions that bypass the approval/evidence discipline this framework requires. All six read as evidence-based, risk-scaled, and appropriately conservative (read-only reviewers stay read-only; the one skill that mutates a real repo — release-publisher — gates every mutating step behind explicit user approval and forbids force-push/tag deletion).
-- **Known gap:** this repo's own `README.md` on `main` describes a much larger, differently-numbered catalog (31 skills, e.g. a `product-requirements-builder` and a `surgical-change-implementer`) that does **not exist yet at any tagged release** — it's roadmap, not shipped. Don't be tempted to pull those from `main`; that would mean depending on an unpinned, unreleased file. That's also why Product and Builder have no vendored skill below — there was no safe match at the pinned version, and reaching for one anyway would have violated the pinning rule for the sake of a complete-looking table.
+- **Integrity caveat:** the tag is unsigned (no GPG signature) — provenance rests on GitHub's custody of the ref, not cryptographic proof of authorship.
+- **Known gap:** this repo's `README.md` on `main` describes a much larger, differently-numbered catalog than what's actually tagged — it's roadmap, not shipped. Don't pull from `main`.
+- Files: `ln-11-plan-reviewer`, `ln-12-delivery-reviewer`, `ln-22-codebase-auditor`, `ln-23-test-suite-auditor`, `ln-42-acceptance-test-builder`, `ln-63-release-publisher`.
+
+### `Jeffallan/claude-skills` (allowlist #3)
+
+- MIT License (see `LICENSE-Jeffallan-claude-skills`).
+- **Pinned at:** tag `v0.4.16`, commit `d5d2dd8ae2ec3842a46e93894655be888fe29446` (lightweight tag — this SHA *is* the commit, no dereferencing needed).
+- Files: `feature-forge` (fills the Product gap — structured requirements interview producing EARS-format specs; explicitly forbids generating a spec without conducting the interview first, which reinforces rather than conflicts with `product-brief`'s own no-assumptions rule) and `spec-miner` (fills a Tech-lead need this kit didn't have: reverse-engineering specs from an undocumented/legacy codebase during `INITIATION.md` Phase 1 discovery), each with their `references/*.md` support files.
+- Also reviewed but **not adopted** (documented here so the check isn't silently repeated later): `security-reviewer`, `code-reviewer`, `test-master` — all solid, MIT, well-scoped single-pass checklists, but this kit already has an allowlisted-adjacent match for those roles from `levnikolaevich` (see the open question above on whether to keep or replace those). Revisit if that question resolves toward replacement.
+- Checked `vercel-labs/agent-skills` (allowlist #2) first per priority — no license and no relevant match, so moved to #3.
+
+### `anthropics/skills` (allowlist #1) — checked, not vendored
+
+Official and first-party, so it clears the trust bar automatically, but almost all 18 skills are office-document/design/comms tooling, not SDLC-role skills. `webapp-testing` (Playwright-based) fits Builder conditionally for web-targeting projects, and `claude-api` fits Builder conditionally if the project integrates the Claude/Anthropic API. Not vendored here — `webapp-testing` ships its own Python helper scripts specific to that one stack, and both are narrow/conditional enough that fetching them fresh into a project that actually needs them beats carrying them in every copy of this generic kit. See `SKILLS.md` for the pinned commit and URLs.
 
 ## Updating
 
-Don't repoint these to `latest`/`main` casually. To take a newer version: pick a new tag, dereference it to its commit SHA the same way (`git/refs/tags/<tag>` → `git/tags/<sha>` → the `object.sha` it points to), re-fetch and re-read every changed file in full, update the pin recorded here and in `SKILLS.md`, and record the change as a decision (`docs/decisions.md` in a project that adopted this kit) since it's a change to what an agent is allowed to run.
+Don't repoint any of these to `latest`/`main` casually. To take a newer version: pick a new tag, resolve it to its commit SHA (dereference an annotated tag via `git/tags/<sha>` if needed — a lightweight tag's ref SHA already *is* the commit), re-fetch and re-read every changed file in full, update the pin recorded here and in `SKILLS.md`, and record the change as a decision (`docs/decisions.md` in a project that adopted this kit) since it's a change to what an agent is allowed to run.
 
 ## Files
 
-| File | Upstream path at the pinned commit |
-|---|---|
-| `ln-11-plan-reviewer/SKILL.md` | `plugins/review-suite/skills/ln-11-plan-reviewer/SKILL.md` |
-| `ln-12-delivery-reviewer/SKILL.md` | `plugins/review-suite/skills/ln-12-delivery-reviewer/SKILL.md` |
-| `ln-22-codebase-auditor/SKILL.md` | `plugins/codebase-audit-suite/skills/ln-22-codebase-auditor/SKILL.md` |
-| `ln-23-test-suite-auditor/SKILL.md` | `plugins/codebase-audit-suite/skills/ln-23-test-suite-auditor/SKILL.md` |
-| `ln-42-acceptance-test-builder/SKILL.md` | `plugins/testing-suite/skills/ln-42-acceptance-test-builder/SKILL.md` |
-| `ln-63-release-publisher/SKILL.md` | `plugins/maintainer-suite/skills/ln-63-release-publisher/SKILL.md` |
+| File | Source repo | Upstream path at the pinned commit |
+|---|---|---|
+| `ln-11-plan-reviewer/SKILL.md` | levnikolaevich/claude-code-skills | `plugins/review-suite/skills/ln-11-plan-reviewer/SKILL.md` |
+| `ln-12-delivery-reviewer/SKILL.md` | levnikolaevich/claude-code-skills | `plugins/review-suite/skills/ln-12-delivery-reviewer/SKILL.md` |
+| `ln-22-codebase-auditor/SKILL.md` | levnikolaevich/claude-code-skills | `plugins/codebase-audit-suite/skills/ln-22-codebase-auditor/SKILL.md` |
+| `ln-23-test-suite-auditor/SKILL.md` | levnikolaevich/claude-code-skills | `plugins/codebase-audit-suite/skills/ln-23-test-suite-auditor/SKILL.md` |
+| `ln-42-acceptance-test-builder/SKILL.md` | levnikolaevich/claude-code-skills | `plugins/testing-suite/skills/ln-42-acceptance-test-builder/SKILL.md` |
+| `ln-63-release-publisher/SKILL.md` | levnikolaevich/claude-code-skills | `plugins/maintainer-suite/skills/ln-63-release-publisher/SKILL.md` |
+| `feature-forge/SKILL.md` + `references/*.md` | Jeffallan/claude-skills | `skills/feature-forge/SKILL.md` + `skills/feature-forge/references/*.md` |
+| `spec-miner/SKILL.md` + `references/*.md` | Jeffallan/claude-skills | `skills/spec-miner/SKILL.md` + `skills/spec-miner/references/*.md` |

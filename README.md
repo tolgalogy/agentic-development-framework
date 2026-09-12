@@ -35,7 +35,7 @@ Four roles, matching `WORKFLOW.md` §2 exactly — no extra permanent roles were
 
 `security-reviewer` is the one specialist capability built in by default, because `CLAUDE.md` §7 makes security review mandatory for essentially every high-risk task (auth, payments, PII, public APIs, migrations, infra). Other specialists (performance, accessibility, platform) are **conditional** per `WORKFLOW.md` §8 — don't pre-create agents for them. When a project's `docs/project-policy.md` actually activates one, copy `templates/agents/specialist-reviewer.md.template` and fill it in.
 
-Each agent's core lifecycle skill is authored in-house, but four of the five also have an optional, deeper vendored skill they can reach for on high-risk or otherwise warranted work (an independent plan/delivery review, a test-suite audit, a broader security/health audit, or publishing an actual tagged release) — see `SKILLS.md` for exactly which, sourced from where, and pinned to what version. Product and Builder don't have one: no safe match existed at an actual pinned release, and their in-house skill already covers the role on its own.
+Each agent's core lifecycle skill is authored in-house, but all except Builder also have an optional, deeper vendored skill they can reach for on high-risk or otherwise warranted work (a requirements interview aid, legacy-codebase discovery, an independent plan/delivery review, a test-suite audit, a broader security/health audit, or publishing an actual tagged release) — see `SKILLS.md` for exactly which, sourced from where, and pinned to what version. Skill sourcing is scoped to a small, priority-ordered allowlist of repos (also in `SKILLS.md`) rather than an open-ended search. Builder has none: no safe match existed at an actual pinned release across any allowlisted repo, and `build` already covers the role on its own.
 
 ### How Product actually gathers requirements
 
@@ -43,7 +43,7 @@ Each agent's core lifecycle skill is authored in-house, but four of the five als
 
 ## Why this stays small (80/20)
 
-- 4 roles, 1 default specialist, 5 in-house skills, 6 vendored supporting skills (pinned and reviewed, not a bulk import), 5 doc templates, 3 CI templates. That's the whole kit — resist the urge to add a role, skill, or document for every idea; `CLAUDE.md` §3 and `INITIATION.md` §3 exist specifically to block that drift.
+- 4 roles, 1 default specialist, 5 in-house skills, 8 vendored supporting skills (pinned and reviewed, not a bulk import, sourced from a 4-repo priority allowlist), 5 doc templates, 3 CI templates. That's the whole kit — resist the urge to add a role, skill, or document for every idea; `CLAUDE.md` §3 and `INITIATION.md` §3 exist specifically to block that drift.
 - Every gate maps to something in `WORKFLOW.md`/`CLAUDE.md` — if a proposed addition doesn't cite a specific section it's implementing, it's probably scope creep, not framework.
 - Context/token discipline is load-bearing, not optional: each skill loads only the task packet + `docs/project-policy.md` by default (`WORKFLOW.md` §4), and pulls in more only when the task actually needs it.
 - Risk-based validation means most tasks (low risk) only ever need self-test + targeted review — the full security/functional/quality stack is reserved for the work that's actually high-risk, per `WORKFLOW.md` §8.
