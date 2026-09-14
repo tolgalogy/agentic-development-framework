@@ -8,8 +8,6 @@ This is not another coding agent. It is a governance and execution framework des
 
 It is a kit to copy into a real project repository, not a product or runtime platform itself.
 
-Bootstrap document versions: `CLAUDE.md` 3.0.0, `WORKFLOW.md` 3.0.0, `INITIATION.md` 3.0.0.
-
 ---
 
 ## Why this exists
@@ -24,7 +22,7 @@ Coding agents can generate and modify software at unprecedented speed. Speed alo
 - auditable decisions
 - controlled release authority
 
-The framework addresses those gaps by defining the operating model before implementation begins.
+This framework defines those operating boundaries before implementation begins.
 
 The goal is not to make agents autonomous at all costs.
 
@@ -40,13 +38,13 @@ Human authority remains explicit throughout the lifecycle.
 
 ## What this framework provides
 
-The framework defines a lightweight operating system for agent-assisted software delivery.
+The framework provides a lightweight operating model for agent-assisted software delivery.
 
-It provides:
+It defines:
 
-- explicit human authority and approval boundaries
+- explicit Human authority and approval boundaries
 - risk-based validation and security review
-- defined Product, Technical Lead, Builder, and Verifier roles
+- Product, Technical Lead, Builder, and Verifier roles
 - bounded agent permissions and task scope
 - controlled requirement versioning
 - independent verification where risk requires it
@@ -57,9 +55,9 @@ It provides:
 - project initialization and policy templates
 - CI templates for web, mobile, and desktop projects
 
-The framework intentionally does not attempt to provide a runtime orchestration platform, persistence layer, or automatic permission engine.
+The framework intentionally does not claim to provide a runtime orchestration platform, persistence layer, or automatic permission engine.
 
-Until such runtime capabilities are explicitly added and validated, the protocol is followed manually and evidence is recorded in project artifacts and Git.
+Until such capabilities are explicitly added and validated, the protocol is followed manually and evidence is recorded in project artifacts and Git.
 
 ---
 
@@ -77,9 +75,9 @@ Technical Lead
 Builder
   ↓
 Verifier
+  ↓
+Release
 ```
-
-Release is not a role. It is a gate owned by the Technical Lead and the Human, subject to project policy.
 
 This is not an unconditional autonomous pipeline.
 
@@ -89,7 +87,6 @@ Human authority remains required for:
 - scope
 - priorities
 - requirement approval
-- module breakdown confirmation
 - organizational changes
 - release decisions reserved by project policy
 
@@ -167,8 +164,6 @@ Quality review
 Security review
 ```
 
-The effective policy is the strongest applicable rule from project policy, requirement, and task. The implementation agent is never the sole validator for medium- or high-risk work.
-
 Security considerations can include:
 
 - authentication
@@ -190,17 +185,16 @@ The objective is proportional validation rather than applying maximum ceremony t
 
 ## Role model
 
-| Role | Primary responsibility | Explicit boundary |
-| --- | --- | --- |
-| Human | Intent, scope, priorities, approvals, organizational authority, release decisions | Final authority |
-| Product | What and why; requirements, acceptance criteria, product brief | Cannot implement, cannot decide an unanswered detail, cannot settle the module breakdown alone |
-| Technical Lead | How; architecture, decomposition, dependencies, coordination, merge authorization | Does not implement product code |
-| Builder | Authorized implementation | Cannot approve or merge its own medium+ risk work |
-| Verifier | Independent validation, review, and evidence | Does not implement or fix product code |
-| Security Reviewer | Security review for high-risk and security-flagged work | Activated on risk; does not implement fixes |
-| Specialists | Activated when task risk or domain requires additional capability | Not created as permanent roles |
+| Role | Primary responsibility | Agent | Key boundary |
+| --- | --- | --- | --- |
+| Human | Intent, scope, priorities, approvals, organizational authority, release decisions | — | Final authority |
+| Product | What and why; requirements and acceptance criteria | `product` | Does not implement or silently decide unanswered product questions |
+| Technical Lead | How; architecture, decomposition, dependencies, coordination | `tech-lead` | Does not implement product code |
+| Builder | Authorized implementation | `builder` | Does not approve or merge medium/high-risk work it wrote |
+| Verifier | Independent validation and review | `verifier` | Does not fix or self-review its implementation |
+| Security Reviewer | Security analysis for applicable high-risk work | `security-reviewer` | Activated according to risk and project policy |
 
-One agent may perform multiple roles for low-risk work, but it must not approve its own work when independent review is required.
+Specialist capabilities such as performance, accessibility, or platform review are conditional. They are not pre-created unless the project actually requires them.
 
 ---
 
@@ -228,15 +222,15 @@ Skills cannot grant authority.
 
 Agents cannot self-grant authority.
 
-Tools, repositories, secrets, and other resources remain bounded to the current task and project policy.
+Tools, secrets, repositories, and other resources remain bounded to the current task and project policy.
 
 ---
 
-## Product requirements are human-controlled
+## Product requirements are Human-controlled
 
 The Product workflow begins with Human Product Intent.
 
-The Product role then converts that intent into a structured Product Brief containing:
+The Product role structures that intent into a Product Brief containing:
 
 - goal
 - users
@@ -247,27 +241,13 @@ The Product role then converts that intent into a structured Product Brief conta
 - risks
 - open questions
 
-The Product interview is interactive and runs in the working session itself — it is never delegated wholesale to the `product` subagent, which cannot hold a back-and-forth with the Human. The subagent only drafts files from answers already given.
+`/product-brief` is an interactive interview rather than a form that the Human fills in once.
 
-Recommendations are presented to the Human but are never silently applied.
+Recommendations may be presented to the Human, but they are never silently applied.
 
-After the brief is approved, Product proposes a module breakdown. That proposal is confirmed or redrawn by the Human, never decided by the agent. Each confirmed module receives its own specification under `docs/requirements/<slug>-v<n>/modules/`, and implementation begins only after the full requirement set is approved.
+Once the brief is approved, Product proposes a candidate module breakdown. The Human must confirm or redraw that breakdown before implementation proceeds.
 
----
-
-## Context and token discipline
-
-Context management is treated as an engineering constraint, not an optimization.
-
-Agents load the minimum context needed for the current decision:
-
-```
-Always:      task packet + project policy
-Usually:     project profile + architecture summary
-When needed: relevant source files, tests, ADRs, security or platform policy
-```
-
-Unchanged bootstrap documents and unrelated modules are not reread.
+Each confirmed module receives its own specification, and only after the required approval does the workflow proceed to planning.
 
 ---
 
@@ -283,9 +263,7 @@ The repository is intentionally small:
 ├── templates/
 ├── .gitignore
 ├── CLAUDE.md
-├── CONTRIBUTING.md
 ├── INITIATION.md
-├── LICENSE
 ├── README.md
 ├── SKILLS.md
 └── WORKFLOW.md
@@ -303,7 +281,7 @@ Changes to the constitution require Human approval, a recorded decision, and a v
 
 ### Skills
 
-- `SKILLS.md` — catalog of in-house and vendored skills, their sources, versions, and provenance
+- `SKILLS.md` — catalog of in-house and vendored skills, sources, versions, and provenance
 - `.claude/skills/` — in-house workflow skills
 
 ### Agents
@@ -318,8 +296,6 @@ Changes to the constitution require Human approval, a recorded decision, and a v
 
 ### Templates
 
-`templates/` contains reusable project assets:
-
 ```
 templates/
 ├── docs/
@@ -329,9 +305,17 @@ templates/
     └── vendor/
 ```
 
-The documentation templates cover project profile, project policy, architecture summary, decisions, and module specifications.
+The documentation templates cover:
+
+- project profile
+- project policy
+- architecture summary
+- decisions
+- module specifications
 
 CI templates cover web, mobile, and desktop workflows with staging/production environment gates.
+
+The agent template provides a pattern for adding conditional specialist reviewers only when a project actually requires them.
 
 ---
 
@@ -355,38 +339,45 @@ The framework provides five core workflow skills:
 
 There are five vendored supporting skills.
 
-All five are sourced from [`github.com/Jeffallan/claude-skills`](https://github.com/Jeffallan/claude-skills), MIT-licensed, pinned to:
+All five are sourced from:
 
 ```
-tag:    v0.4.16
-commit: d5d2dd8ae2ec3842a46e93894655be888fe29446
+github.com/Jeffallan/claude-skills
 ```
 
-| Skill | Capability | Used by |
-| --- | --- | --- |
-| `feature-forge` | Requirements interview and EARS specification | product |
-| `spec-miner` | Reverse-engineering specs from undocumented or legacy code | tech-lead |
-| `code-reviewer` | Broad-scope PR-style delivery review | verifier |
-| `security-reviewer` | SAST, dependency and secret scanning, security review workflow | security-reviewer |
-| `test-master` | Test generation, mocking, coverage, test-suite auditing | verifier + builder |
+They are pinned to:
 
-The upstream MIT license is retained at `templates/skills/vendor/LICENSE-Jeffallan-claude-skills`, and copyright remains with the original author.
+```
+v0.4.16
+commit d5d2dd8ae2ec3842a46e93894655be888fe29446
+```
 
-Two further skills from [`github.com/anthropics/skills`](https://github.com/anthropics/skills) — `webapp-testing` and `claude-api` — are recorded as conditionally relevant and fetched into a project only when that project actually targets web or integrates the Claude API. They are not vendored here. Check their upstream license terms before use rather than assuming they match this repository's.
+The vendored set includes:
 
-### Sourcing rules
+- `feature-forge` — product requirements interview and EARS specification
+- `spec-miner` — reverse-engineering specifications from undocumented or legacy code
+- `code-reviewer` — broad-scope PR-style delivery review
+- `security-reviewer` — SAST, dependency and secret scanning, plus security review workflow
+- `test-master` — test generation, mocking, coverage, and test-suite auditing
 
-The project maintains a closed four-repository trusted-source allowlist, checked in a fixed priority order. The allowlist is reviewed rather than bulk-imported, and no other repository, marketplace, or website may be introduced as a skill source.
+Skill sourcing is controlled through a closed four-repository trusted-source allowlist, checked in priority order.
 
-Some capabilities intentionally remain unfilled where no suitable trusted skill exists — currently independent plan review and release publication. In those cases, the workflow falls back to Technical Lead or Human judgment and the relevant checklist.
+The allowlist is reviewed rather than bulk-imported.
 
-Vendored skills are not automatically granted additional authority. They are invoked by name when required by the workflow.
+Two capability slots are intentionally left open where no suitable trusted implementation currently exists:
 
-Anything added later must record its source repository, license, pinned tag and commit, upstream path, and consuming agent in `SKILLS.md`. Never pin to `latest` or `main`.
+- independent plan review for the Technical Lead
+- release tagging and publishing
+
+When no suitable trusted skill exists, the workflow falls back to the defined Human/Technical Lead process rather than introducing an unreviewed dependency.
+
+Vendored skills do not automatically receive additional authority. They are invoked when required by the workflow.
+
+See `SKILLS.md` for complete provenance, licensing, source, version, and pinning information.
 
 ---
 
-## Bootstrap
+## Bootstrapping a new project
 
 The framework is designed to be copied into a real project repository.
 
@@ -407,21 +398,19 @@ Then:
 2. Discover the target project's language, framework, package manager, platform, tests, build, deployment, configuration, and security boundaries.
 3. Create or verify the project operating documents.
 4. Define project-specific policy.
-5. Copy the appropriate CI template into `.github/workflows/` and configure the `staging` and `production` environments.
+5. Copy the appropriate CI template into `.github/workflows/`.
 6. Wait for Human Product Intent.
-7. Begin the normal development loop.
+7. Begin the normal development lifecycle.
 
-Successful initialization emits:
+Initialization deliberately creates only what the project actually needs.
 
-```
-ORGANIZATION_INITIALIZED
-Product development: LOCKED
-Next action: WAIT_FOR_HUMAN_PRODUCT_INTENT
-```
+The template does not create runtime infrastructure, event stores, agent contracts, or specialist directories merely because those concepts exist in the framework.
 
-If the bootstrap documents conflict on authority, approval, security, or validation, initialization stops with `ORGANIZATION_INITIALIZATION_BLOCKED` rather than silently choosing the weaker rule. Re-running initialization is idempotent: valid artifacts are reused, product code is preserved, and conflicts are reported rather than overwritten.
+---
 
-The default development loop is:
+## Day-to-day workflow
+
+The normal development loop is:
 
 ```
 /product-brief
@@ -435,21 +424,9 @@ The default development loop is:
 /release
 ```
 
-Initialization deliberately creates only what the project actually needs.
+For individual tasks, Build and Verify may repeat until the task satisfies the applicable validation and review requirements.
 
-The template does not create runtime infrastructure, event stores, agent contracts, or specialist directories merely because those concepts exist in the framework.
-
----
-
-## Bounded repair and execution
-
-Agent execution is deliberately bounded.
-
-The default maximum repair attempts per task is:
-
-```
-3
-```
+The default repair limit is 3 attempts per task.
 
 Tasks should define, where appropriate:
 
@@ -461,15 +438,11 @@ Tasks should define, where appropriate:
 
 This prevents uncontrolled retry loops, context expansion, and silent scope growth.
 
-Repeated failure escalates to the Technical Lead, Product authority, or Human.
-
 ---
 
 ## Git is the source of truth
 
 The framework treats Git and recorded project artifacts as authoritative evidence.
-
-Authorization to merge (`MERGE_APPROVED`) is distinct from confirmation that a merge occurred (`MERGED`).
 
 An agent must not claim that:
 
@@ -485,11 +458,36 @@ Release requires the applicable release checks and approvals.
 
 ---
 
+## Why this stays small
+
+The framework intentionally follows an 80/20 approach.
+
+The current kit contains:
+
+- 4 core roles
+- 1 default specialist capability
+- 5 in-house workflow skills
+- 5 vendored supporting skills
+- 5 documentation templates
+- 3 CI templates
+- 1 closed four-repository trusted-source allowlist
+
+The goal is not to create an agent, skill, document, or process for every possible scenario.
+
+Every permanent addition should implement a real framework requirement and remain consistent with the constitution.
+
+Context and token discipline are part of the design: skills load the task packet and project policy by default, then pull in additional context only when the task requires it.
+
+Risk-based validation similarly avoids applying the full security, functional, and quality stack to every low-risk task.
+
+---
+
 ## What this project is not
 
 This repository is not:
 
-- a replacement for Claude Code or another coding agent
+- another coding agent
+- a replacement for Claude Code or another agent runtime
 - a hosted autonomous software development platform
 - a runtime multi-agent orchestration engine
 - an automatic authorization system
@@ -516,71 +514,55 @@ The framework deliberately favors:
 
 The objective is not maximum agent autonomy.
 
-The objective is useful autonomy within explicit boundaries.
+The objective is:
+
+«Useful autonomy within explicit boundaries.»
 
 ---
 
-## Current scope
+## Changing the framework itself
 
-The current framework provides:
+Changes to:
 
-- 4 core logical roles
-- 1 default specialist security role
-- 5 in-house workflow skills
-- 5 vendored supporting skills
-- 5 documentation templates
-- 3 CI workflow templates
-- 1 closed four-repository trusted-source allowlist
+- `CLAUDE.md`
+- `INITIATION.md`
+- `WORKFLOW.md`
+- authority rules
+- approval rules
+- validation rules
+- security rules
+- merge rules
+- retry limits
+- workflow rules
 
-The framework intentionally leaves some specialist capabilities unfilled where no suitable trusted implementation exists.
+require:
 
-This is a design choice, not an accidental gap.
+1. Human approval
+2. A recorded decision
+3. A version increment on the affected document
+4. Consistency validation across the bootstrap documents
 
----
-
-## Project status
-
-This project is actively evolving.
-
-The framework is intended to remain:
-
-- small enough to understand
-- explicit enough to audit
-- modular enough to adapt
-- strict enough to protect Human authority
-- lightweight enough to use in real projects
-
-The priority is not to accumulate agents or skills.
-
-The priority is to improve the quality, safety, traceability, and reliability of agent-assisted software development.
+See `CONTRIBUTING.md` for contribution and review expectations.
 
 ---
 
 ## Contributing
 
-Issues and discussion are welcome — see [`CONTRIBUTING.md`](CONTRIBUTING.md).
+Contributions are welcome, particularly in:
 
-For significant changes to the framework's architecture or governance model, please open an issue before implementation. Changes to authority, approval, validation, security, merge, retry, or workflow rules follow the controlled change process defined by `CLAUDE.md` and `WORKFLOW.md`.
+- agent and tool adapters for other agentic development environments
+- governance patterns and risk models
+- security controls and verification strategies
+- context and token efficiency
+- CI/CD templates for additional platforms
+- real-world case studies from using the kit on an actual project
+
+For contribution rules, governance changes, skill provenance requirements, and pull-request expectations, see [`CONTRIBUTING.md`](CONTRIBUTING.md).
 
 ---
 
 ## License
 
-Licensed under the MIT License. See [`LICENSE`](LICENSE) for the full text.
+Licensed under the MIT License.
 
-In practice this means you may copy this kit into a private, commercial, or open-source repository, modify any part of it, and redistribute it — provided the copyright notice and license text are retained in copies or substantial portions of the work. The kit is provided "as is", without warranty of any kind.
-
-### Third-party components
-
-The five vendored skills under `templates/skills/vendor/` are copied verbatim from [`Jeffallan/claude-skills`](https://github.com/Jeffallan/claude-skills) under the MIT License, pinned to `v0.4.16` / `d5d2dd8ae2ec3842a46e93894655be888fe29446`. Their upstream license is included in that directory and copyright remains with the original author.
-
-An earlier version of this kit vendored six skills from [`levnikolaevich/claude-code-skills`](https://github.com/levnikolaevich/claude-code-skills), removed once the trusted-source allowlist was confirmed as closed. That set shaped the current skill layout and is credited here; the full removed-to-replacement mapping is in `templates/skills/vendor/README.md`.
-
-### Attribution
-
-The license does not require public credit beyond retaining the notice, but if this kit was useful, a line like the following is appreciated:
-
-```
-Built on the Agentic Development Framework (ADF)
-https://github.com/tolgalogy/agentic-development-framework
-```
+See [`LICENSE`](LICENSE) for the full license text.
